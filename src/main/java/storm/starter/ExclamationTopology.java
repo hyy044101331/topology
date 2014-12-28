@@ -34,54 +34,66 @@ import backtype.storm.utils.Utils;
 import java.util.Map;
 
 /**
- * This is a basic example of a Storm topology.
+ * storm topolofy
+ * <hr>
+ * <p/>
+ * 》》启动zookeeper：
+ * sh /Users/hyy044101331/java_tools/zk-jiqun-start.sh
+ * <p/>
+ * 》》启动storm:
+ * sh /Users/hyy044101331/java_tools/start-storm.sh
+ * <p/>
+ * 》》提交作业：
+ * storm jar topology-0.0.1-SNAPSHOT-jar-with-dependencies.jar storm.starter.ExclamationTopology "mengka-aa"
+ * <p/>
+ * 》》控制台：
+ * http://127.0.0.1:8081/index.html
  */
 public class ExclamationTopology {
 
-  public static class ExclamationBolt extends BaseRichBolt {
-    OutputCollector _collector;
+    public static class ExclamationBolt extends BaseRichBolt {
+        OutputCollector _collector;
 
-    @Override
-    public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
-      _collector = collector;
+        @Override
+        public void prepare(Map conf, TopologyContext context, OutputCollector collector) {
+            _collector = collector;
+        }
+
+        @Override
+        public void execute(Tuple tuple) {
+            _collector.emit(tuple, new Values(tuple.getString(0) + "!!!"));
+            _collector.ack(tuple);
+        }
+
+        @Override
+        public void declareOutputFields(OutputFieldsDeclarer declarer) {
+            declarer.declare(new Fields("word"));
+        }
+
+
     }
 
-    @Override
-    public void execute(Tuple tuple) {
-      _collector.emit(tuple, new Values(tuple.getString(0) + "!!!"));
-      _collector.ack(tuple);
+    public static void main(String[] args) throws Exception {
+        TopologyBuilder builder = new TopologyBuilder();
+
+        builder.setSpout("word", new TestWordSpout(), 10);
+        builder.setBolt("exclaim1", new ExclamationBolt(), 3).shuffleGrouping("word");
+        builder.setBolt("exclaim2", new ExclamationBolt(), 2).shuffleGrouping("exclaim1");
+
+        Config conf = new Config();
+        conf.setDebug(true);
+
+        if (args != null && args.length > 0) {
+            conf.setNumWorkers(3);
+
+            StormSubmitter.submitTopologyWithProgressBar(args[0], conf, builder.createTopology());
+        } else {
+
+            LocalCluster cluster = new LocalCluster();
+            cluster.submitTopology("test", conf, builder.createTopology());
+            Utils.sleep(10000);
+            cluster.killTopology("test");
+            cluster.shutdown();
+        }
     }
-
-    @Override
-    public void declareOutputFields(OutputFieldsDeclarer declarer) {
-      declarer.declare(new Fields("word"));
-    }
-
-
-  }
-
-  public static void main(String[] args) throws Exception {
-    TopologyBuilder builder = new TopologyBuilder();
-
-    builder.setSpout("word", new TestWordSpout(), 10);
-    builder.setBolt("exclaim1", new ExclamationBolt(), 3).shuffleGrouping("word");
-    builder.setBolt("exclaim2", new ExclamationBolt(), 2).shuffleGrouping("exclaim1");
-
-    Config conf = new Config();
-    conf.setDebug(true);
-
-    if (args != null && args.length > 0) {
-      conf.setNumWorkers(3);
-
-      StormSubmitter.submitTopologyWithProgressBar(args[0], conf, builder.createTopology());
-    }
-    else {
-
-      LocalCluster cluster = new LocalCluster();
-      cluster.submitTopology("test", conf, builder.createTopology());
-      Utils.sleep(10000);
-      cluster.killTopology("test");
-      cluster.shutdown();
-    }
-  }
 }
