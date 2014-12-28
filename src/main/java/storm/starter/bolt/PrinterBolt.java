@@ -25,6 +25,18 @@ import backtype.storm.tuple.Tuple;
 
 public class PrinterBolt extends BaseBasicBolt {
 
+  /**
+   *  execute()函数:<br>
+   *     在接受到消息后会调用此函数，用户可以在其中执行自己想要的操作;<br>
+   *     被动；<br>
+   *<br>
+   * 》》tuple：<br>
+   *      一个tuple是一个基本数据单元；<br>
+   *
+   *
+   * @param tuple
+   * @param collector
+   */
   @Override
   public void execute(Tuple tuple, BasicOutputCollector collector) {
     System.out.println(tuple);

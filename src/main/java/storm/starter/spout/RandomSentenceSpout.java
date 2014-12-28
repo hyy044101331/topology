@@ -39,6 +39,11 @@ public class RandomSentenceSpout extends BaseRichSpout {
     _rand = new Random();
   }
 
+  /**
+   *  nextTuple()函数:
+   *     storm框架会不停地调用此函数，用户只要在其中生成源数据即可;
+   *     主动；
+   */
   @Override
   public void nextTuple() {
     Utils.sleep(100);
