@@ -6,6 +6,9 @@ import backtype.storm.testing.TestWordSpout;
 import backtype.storm.topology.TopologyBuilder;
 
 /**
+ *
+ *  storm jar topology-0.0.1-SNAPSHOT-jar-with-dependencies.jar storm.starter.topology.MengkaTopology "mengka-bb"
+ *  <br><br/>
  * Created by mengka
  */
 public class MengkaTopology {
@@ -17,9 +20,9 @@ public class MengkaTopology {
          *
          */
         TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("mengka-spout-word", new TestWordSpout(), 10);
-        builder.setBolt("mengka-bolt-exclaim1", new MengkaBolt(), 3).shuffleGrouping("word");
-        builder.setBolt("mengka-bolt-exclaim2", new MengkaBolt(), 2).shuffleGrouping("exclaim1");
+        builder.setSpout("mengka-spout-word-aa2", new TestWordSpout(), 10);
+        builder.setBolt("mengka-bolt-exclaim-aa3", new MengkaBolt(), 3).shuffleGrouping("mengka-spout-word-aa2");
+        builder.setBolt("mengka-bolt-exclaim-aa4", new MengkaBolt(), 2).shuffleGrouping("mengka-bolt-exclaim-aa3");
 
         /**
          *   …Ë÷√config
