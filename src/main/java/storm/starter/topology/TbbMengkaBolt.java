@@ -36,8 +36,11 @@ public class TbbMengkaBolt extends BaseRichBolt {
     @Override
     public void execute(Tuple tuple) {
         String data = tuple.getString(0);
-        String sendContent = data + "-#tbb-mengka#";
-        _collector.emit(tuple, new Values(sendContent));
+        String sendContent1 = data + "-#tbb-mengka#";
+
+        String source = tuple.getSourceComponent();
+        String sendContent2 = "{{source=" + source + "}}" + "-#tbb-mengka#";
+        _collector.emit(tuple, new Values(sendContent1,sendContent2));
         _collector.ack(tuple);
     }
 
