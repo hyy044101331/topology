@@ -5,8 +5,6 @@ import backtype.storm.LocalCluster;
 import backtype.storm.testing.TestWordSpout;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import storm.starter.topology.MengkaBolt;
 
 /**
@@ -18,7 +16,7 @@ import storm.starter.topology.MengkaBolt;
  */
 public class BaicaiTopology {
 
-    private static final Logger log = LoggerFactory.getLogger(BaicaiTopology.class);
+//    private static final Logger log = LoggerFactory.getLogger(BaicaiTopology.class);
 
     public static void main(String[] args){
         /**
@@ -40,7 +38,7 @@ public class BaicaiTopology {
 
 
         if (args == null && args.length <= 0) {
-            log.error("-----------------, topology name is null!");
+//            log.error("-----------------, topology name is null!");
             return;
         }
 

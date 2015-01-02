@@ -2,13 +2,15 @@ package storm.starter.topology;
 
 import backtype.storm.Config;
 import backtype.storm.StormSubmitter;
-import backtype.storm.testing.TestWordSpout;
 import backtype.storm.topology.TopologyBuilder;
 
 /**
- *  本地模式：
- *         storm jar topology-0.0.1-SNAPSHOT-jar-with-dependencies.jar storm.starter.topology.MengkaTopology "mengka-bb"
- *  <br><br/>
+ * 本地模式：
+ *    storm jar topology-0.0.1-SNAPSHOT-jar-with-dependencies.jar storm.starter.topology.MengkaTopology "mengka-bb"
+ * <br>
+ *    storm kill mengka-ww
+ * <br/>
+ *
  * Created by mengka
  */
 public class MengkaTopology {
@@ -20,9 +22,11 @@ public class MengkaTopology {
          *
          */
         TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("mengka-spout-word-aa2", new TestWordSpout(), 10);
+        builder.setSpout("mengka-spout-word-aa2", new MengkaSpout(), 10);
         builder.setBolt("mengka-bolt-exclaim-aa3", new MengkaBolt(), 3).shuffleGrouping("mengka-spout-word-aa2");
-        builder.setBolt("mengka-bolt-exclaim-aa4", new MengkaBolt(), 2).shuffleGrouping("mengka-bolt-exclaim-aa3");
+        builder.setBolt("mengka-bolt-exclaim-aa5", new TaaMengkaBolt(), 3).shuffleGrouping("mengka-spout-word-aa2");
+        builder.setBolt("mengka-bolt-exclaim-aa6", new TbbMengkaBolt(), 3).shuffleGrouping("mengka-bolt-exclaim-aa5");
+        builder.setBolt("mengka-bolt-exclaim-aa4", new TbbMengkaBolt(), 3).shuffleGrouping("mengka-bolt-exclaim-aa3");
 
         /**
          *   设置config

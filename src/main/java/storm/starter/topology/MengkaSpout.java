@@ -10,15 +10,14 @@ import backtype.storm.utils.Utils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
+ *   每3s向bolt发送一个数据
+ *
  * Created by mengka
  */
 public class MengkaSpout extends BaseRichSpout {
 
-    public static Logger LOG = LoggerFactory.getLogger(MengkaSpout.class);
 
     boolean _isDistributed;
 
@@ -46,15 +45,18 @@ public class MengkaSpout extends BaseRichSpout {
      */
     @Override
     public void nextTuple() {
-        Utils.sleep(100L);
-        String[] words = new String[]{"-mengka AAA-", "-mengka BBB-", "-mengka CCC-", "-mengka DDD-", "-mengka EEE-"};
-        Random rand = new Random();
-        String word = words[rand.nextInt(words.length)];
-
+        Utils.sleep(3000L);
+        String word = getContent();
         /**
          * spout发送新的消息到topology
          */
         this._collector.emit(new Values(new Object[]{word}));
+    }
+
+    public String getContent(){
+        String[] words = new String[]{"-mengka AAA-", "-mengka BBB-", "-mengka CCC-", "-mengka DDD-", "-mengka EEE-"};
+        Random rand = new Random();
+        return words[rand.nextInt(words.length)];
     }
 
     /**
@@ -64,7 +66,7 @@ public class MengkaSpout extends BaseRichSpout {
      */
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields(new String[]{"mengka-word"}));
+        outputFieldsDeclarer.declare(new Fields(new String[]{"word"}));
     }
 
     public Map<String, Object> getComponentConfiguration() {
