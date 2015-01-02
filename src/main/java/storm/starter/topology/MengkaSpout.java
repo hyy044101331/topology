@@ -33,11 +33,6 @@ public class MengkaSpout extends BaseRichSpout {
     }
 
     @Override
-    public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields(new String[]{"word"}));
-    }
-
-    @Override
     public void open(Map map, TopologyContext topologyContext, SpoutOutputCollector spoutOutputCollector) {
         this._collector = spoutOutputCollector;
     }
@@ -45,7 +40,9 @@ public class MengkaSpout extends BaseRichSpout {
     /**
      * nextTuple()函数:
      * storm框架会不停地调用此函数，用户只要在其中生成源数据即可;
-     * 主动；
+     * 主动;
+     *
+     * 每100ms发送随机的一个单词作为元组;
      */
     @Override
     public void nextTuple() {
@@ -53,9 +50,22 @@ public class MengkaSpout extends BaseRichSpout {
         String[] words = new String[]{"-mengka AAA-", "-mengka BBB-", "-mengka CCC-", "-mengka DDD-", "-mengka EEE-"};
         Random rand = new Random();
         String word = words[rand.nextInt(words.length)];
+
+        /**
+         * spout发送新的消息到topology
+         */
         this._collector.emit(new Values(new Object[]{word}));
     }
 
+    /**
+     *  spout会发送一个字段名为"mengka-word"的元组tuple
+     *
+     * @param outputFieldsDeclarer
+     */
+    @Override
+    public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
+        outputFieldsDeclarer.declare(new Fields(new String[]{"mengka-word"}));
+    }
 
     public Map<String, Object> getComponentConfiguration() {
         if(!this._isDistributed) {

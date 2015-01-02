@@ -6,8 +6,8 @@ import backtype.storm.testing.TestWordSpout;
 import backtype.storm.topology.TopologyBuilder;
 
 /**
- *
- *  storm jar topology-0.0.1-SNAPSHOT-jar-with-dependencies.jar storm.starter.topology.MengkaTopology "mengka-bb"
+ *  本地模式：
+ *         storm jar topology-0.0.1-SNAPSHOT-jar-with-dependencies.jar storm.starter.topology.MengkaTopology "mengka-bb"
  *  <br><br/>
  * Created by mengka
  */
