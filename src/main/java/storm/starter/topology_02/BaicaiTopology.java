@@ -2,10 +2,10 @@ package storm.starter.topology_02;
 
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
-import backtype.storm.testing.TestWordSpout;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
-import storm.starter.topology.MengkaBolt;
+import storm.starter.topology_02.bolt.MengkaSocketBolt;
+import storm.starter.topology_02.spout.MengkaSocketSpout;
 
 /**
  *  storm工作模式：
@@ -16,17 +16,15 @@ import storm.starter.topology.MengkaBolt;
  */
 public class BaicaiTopology {
 
-//    private static final Logger log = LoggerFactory.getLogger(BaicaiTopology.class);
 
     public static void main(String[] args){
-        /**
-         *  构建topology
-         *
-         */
-        TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("mengka-spout-word-aa2", new TestWordSpout(), 10);
-        builder.setBolt("mengka-bolt-exclaim-aa3", new MengkaBolt(), 3).shuffleGrouping("mengka-spout-word-aa2");
-        builder.setBolt("mengka-bolt-exclaim-aa4", new MengkaBolt(), 2).shuffleGrouping("mengka-bolt-exclaim-aa3");
+
+        if (args == null && args.length <= 0) {
+            return;
+        }
+
+        String topologyName = args[0];
+        String outPath = args[1];
 
         /**
          *   设置config
@@ -36,16 +34,18 @@ public class BaicaiTopology {
         conf.setDebug(true);
         conf.setNumWorkers(3);//指定集群分配多少进程来执行topology
 
+        /**
+         *  构建topology
+         *
+         */
+        TopologyBuilder builder = new TopologyBuilder();
+        builder.setSpout("mengka-socket-spout-1", new MengkaSocketSpout(), 10);
+        builder.setBolt("mengka-socket-bolt-2", new MengkaSocketBolt(outPath), 3).shuffleGrouping("mengka-socket-spout-1");
 
-        if (args == null && args.length <= 0) {
-//            log.error("-----------------, topology name is null!");
-            return;
-        }
 
         /**
          *  提交topology到这个虚拟的集群
          */
-        String topologyName = args[0];
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology(topologyName, conf, builder.createTopology());
 
