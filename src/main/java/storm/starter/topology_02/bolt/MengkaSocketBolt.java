@@ -54,13 +54,13 @@ public class MengkaSocketBolt extends BaseRichBolt {
     }
 
     /**
-     *  写入到文件中
+     * 写入到文件中
      *
      * @param data
      */
     private void writeDate(String data) {
         try {
-            writer.write(data + ",bkeep" + "\n");
+            writer.write(data + "\n");
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();

@@ -14,7 +14,7 @@ import storm.starter.topology_02.spout.MengkaSocketSpout;
  *
  * Created by mengka
  */
-public class BaicaiTopology {
+public class RealtimeLogTopology {
 
 
     public static void main(String[] args){
