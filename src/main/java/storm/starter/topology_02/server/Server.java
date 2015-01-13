@@ -65,7 +65,6 @@ public class Server {
                          *  接受数据
                          */
                         String msg = clientReader.readLine();
-                        System.out.println(msg);
                         clientWriter.println("Server received " + msg);
                         clientWriter.flush();
 
@@ -74,16 +73,11 @@ public class Server {
                          */
                         for (int i = 0; i < writers.size(); i++) {
                             writer = writers.get(i);
-                            System.out.println(i);
-                            System.out.println("send msg:" + msg);
+                            System.out.println("writer["+i+"] send msg: " + msg);
                             writer.println(msg);
                             writer.flush();
                         }
 
-                        System.out.println(client.getInetAddress());
-                        if (msg.equals("bye")) {
-                            break;
-                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
